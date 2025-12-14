@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="jakarta.faces.passthrough">
+<h:head>
+    <title>Create Task - Project Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</h:head>
+<h:body class="bg-gray-50">
+    <div class="min-h-screen py-10">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-6">
+                <a href="#{request.contextPath}/dashboard.xhtml" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    &larr; Back to Dashboard
+                </a>
+            </div>
+            
+            <div class="bg-white shadow sm:rounded-lg overflow-hidden">
+                <div class="px-4 py-5 sm:px-6 bg-gray-50 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Create New Task
+                    </h3>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                        Assign a new task to yourself in a project.
+                    </p>
+                </div>
+                
+                <div class="px-4 py-5 sm:p-6">
+                    <h:form id="createTaskForm" class="space-y-6">
+                        <h:messages globalOnly="true" class="mb-4 text-sm text-red-600" />
+
+                        <div>
+                            <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
+                            <h:selectOneMenu id="project" value="#{taskBean.selectedProjectId}" required="true" requiredMessage="Project is required"
+                                             class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
+                                <f:selectItem itemLabel="Select a Project" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{taskBean.userProjects}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}" />
+                            </h:selectOneMenu>
+                            <h:message for="project" class="mt-1 text-sm text-red-600" />
+                        </div>
+
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700">Task Title</label>
+                            <h:inputText id="title" value="#{taskBean.title}" required="true" requiredMessage="Title is required"
+                                         p:placeholder="e.g., Fix Navigation Bug"
+                                         class="mt-1 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2" />
+                            <h:message for="title" class="mt-1 text-sm text-red-600" />
+                        </div>
+
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                            <h:inputTextarea id="description" value="#{taskBean.description}" rows="3"
+                                             class="mt-1 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2" />
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                            <div>
+                                <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
+                                <h:selectOneMenu id="priority" value="#{taskBean.priority}"
+                                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
+                                    <f:selectItem itemLabel="Low" itemValue="LOW" />
+                                    <f:selectItem itemLabel="Medium" itemValue="MEDIUM" />
+                                    <f:selectItem itemLabel="High" itemValue="HIGH" />
+                                </h:selectOneMenu>
+                            </div>
+
+                            <div>
+                                <label for="dueDate" class="block text-sm font-medium text-gray-700">Due Date</label>
+                                <!-- HTML5 date input bound to LocalDateTime converter not standard in plain JSF without custom converter or specific PrimeFaces. 
+                                     Using simple inputText with converter for now or standard f:convertDateTime -->
+                                <h:inputText id="dueDate" value="#{taskBean.dueDate}" p:type="datetime-local"
+                                             class="mt-1 shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md border p-2">
+                                     <f:convertDateTime pattern="yyyy-MM-dd'T'HH:mm" type="localDateTime" />
+                                </h:inputText>
+                                <p class="mt-1 text-xs text-gray-500">Format: YYYY-MM-DDTHH:MM</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-5 border-t border-gray-200">
+                            <div class="flex justify-end">
+                                <a href="#{request.contextPath}/dashboard.xhtml" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3">
+                                    Cancel
+                                </a>
+                                <h:commandButton action="#{taskBean.createTask}" value="Create Task"
+                                                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer" />
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

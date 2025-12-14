@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Dashboard - Project Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</h:head>
+<h:body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Navigation (Simplified) -->
+        <nav class="bg-white border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex">
+                        <div class="flex-shrink-0 flex items-center">
+                            <span class="text-xl font-bold text-blue-600">ProjectMgr</span>
+                        </div>
+                        <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                            <a href="#{request.contextPath}/dashboard.xhtml" class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Dashboard
+                            </a>
+                            <a href="#{request.contextPath}/projects/" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Projects
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="py-10">
+            <header>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl font-bold leading-tight text-gray-900">
+                        Welcome, #{dashboardBean.currentUser.name}
+                    </h1>
+                </div>
+            </header>
+            <main>
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-8">
+                    
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-folder text-blue-500 text-2xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Total Projects</dt>
+                                            <dd class="text-lg font-medium text-gray-900">#{dashboardBean.dashboardStats['totalProjects']}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Completed Tasks</dt>
+                                            <dd class="text-lg font-medium text-gray-900">#{dashboardBean.dashboardStats['completedTasks']}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="p-5">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-clock text-yellow-500 text-2xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Pending Tasks</dt>
+                                            <dd class="text-lg font-medium text-gray-900">#{dashboardBean.dashboardStats['pendingTasks']}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Projects List -->
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+                        <div class="px-4 py-5 border-b border-gray-200 sm:px-6 flex justify-between items-center">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                Your Projects
+                            </h3>
+                            <a href="#{request.contextPath}/tasks/create.xhtml" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+                                Create Task
+                            </a>
+                        </div>
+                        <ul role="list" class="divide-y divide-gray-200">
+                            <ui:repeat value="#{dashboardBean.projects}" var="project">
+                                <li>
+                                    <a href="#{request.contextPath}/projects/view/#{project.id}" class="block hover:bg-gray-50">
+                                        <div class="px-4 py-4 sm:px-6">
+                                            <div class="flex items-center justify-between">
+                                                <p class="text-sm font-medium text-blue-600 truncate">
+                                                    #{project.name}
+                                                </p>
+                                                <div class="ml-2 flex-shrink-0 flex">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full #{project.status == 'COMPLETED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                                        #{project.status}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2 sm:flex sm:justify-between">
+                                                <div class="sm:flex">
+                                                    <p class="flex items-center text-sm text-gray-500">
+                                                        #{project.description}
+                                                    </p>
+                                                </div>
+                                                <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                                    <i class="fas fa-calendar mr-1.5 flex-shrink-0 text-gray-400"></i>
+                                                    <p>
+                                                        Due: <h:outputText value="#{project.dueDate}">
+                                                            <f:convertDateTime pattern="MMM dd, yyyy" type="localDateTime"/>
+                                                        </h:outputText>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ui:repeat>
+                            <h:panelGroup rendered="#{empty dashboardBean.projects}">
+                                <div class="px-4 py-5 text-center text-gray-500 text-sm">
+                                    No projects found. <a href="#{request.contextPath}/projects/create" class="text-blue-600 hover:underline">Create one?</a>
+                                </div>
+                            </h:panelGroup>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</h:body>
+</html>
